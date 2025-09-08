@@ -7,6 +7,8 @@ spring:
     url: jdbc:mysql://localhost:3306/ai_generate_code
     username: root
     password: 2771651667
+  profiles:
+    active: local
 server:
   port: 8123
   servlet:
