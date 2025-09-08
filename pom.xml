@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.yupi</groupId>
-    <artifactId>yu-ai-code-mother</artifactId>
+    <artifactId>newCode</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>yu-ai-code-mother</name>
     <description>yu-ai-code-mother</description>
@@ -86,6 +86,13 @@
             <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
             <version>1.1.0-beta7</version>
         </dependency>
+        <!-- 响应式编程-->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-reactor</artifactId>
+            <version>1.1.0-beta7</version>
+        </dependency>
+
     </dependencies>
 
     <build>
