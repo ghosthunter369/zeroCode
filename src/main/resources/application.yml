@@ -1,12 +1,12 @@
 spring:
   application:
-    name: yu-ai-code-mother-backend
+    name: heartunderblade-backend
   # mysql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yu_ai_code_mother
+    url: jdbc:mysql://localhost:3306/ai_generate_code
     username: root
-    password: 123456
+    password: 2771651667
 server:
   port: 8123
   servlet:
@@ -22,3 +22,7 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+#mybatis-plus
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
