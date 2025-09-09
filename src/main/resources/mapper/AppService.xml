@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stefanie.mapper.AppMapper">
+
+    <resultMap id="BaseResultMap" type="com.stefanie.model.entity.App">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="appName" column="appName" jdbcType="VARCHAR"/>
+            <result property="cover" column="cover" jdbcType="VARCHAR"/>
+            <result property="initPrompt" column="initPrompt" jdbcType="VARCHAR"/>
+            <result property="codeGenType" column="codeGenType" jdbcType="VARCHAR"/>
+            <result property="deployKey" column="deployKey" jdbcType="VARCHAR"/>
+            <result property="deployedTime" column="deployedTime" jdbcType="TIMESTAMP"/>
+            <result property="priority" column="priority" jdbcType="INTEGER"/>
+            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="editTime" column="editTime" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,appName,cover,
+        initPrompt,codeGenType,deployKey,
+        deployedTime,priority,userId,
+        editTime,createTime,updateTime,
+        isDelete
+    </sql>
+</mapper>
