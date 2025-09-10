@@ -53,6 +53,6 @@ public interface AiCodeGeneratorService {
      * @param userMessage 用户提示词
      * @return AI 的输出结果
      */
-    @SystemMessage(fromResource = "prompt/codegen-vue-project-system-prompt.txt")
+    @SystemMessage(fromResource = "prompt/codegen-vue-project-test-prompt.txt")
     TokenStream generateVueProjectCodeStream(@MemoryId long appId, @UserMessage String userMessage);
 }

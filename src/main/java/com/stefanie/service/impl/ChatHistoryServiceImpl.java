@@ -12,6 +12,7 @@ import com.stefanie.mapper.ChatHistoryMapper;
 import com.stefanie.model.dto.chathistory.ChatHistoryQueryRequest;
 import com.stefanie.model.entity.App;
 import com.stefanie.model.entity.ChatHistory;
+import com.stefanie.model.entity.User;
 import com.stefanie.model.enums.ChatHistoryMessageTypeEnum;
 import com.stefanie.service.AppService;
 import com.stefanie.service.ChatHistoryService;
@@ -21,15 +22,14 @@ import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
-import com.stefanie.model.entity.User;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
-import org.springframework.stereotype.Service;
 
 /**
  * 对话历史 服务层实现。
  *
- 
  */
 @Service
 @Slf4j
@@ -163,4 +163,3 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
         return queryWrapper;
     }
 }
-// End of file
