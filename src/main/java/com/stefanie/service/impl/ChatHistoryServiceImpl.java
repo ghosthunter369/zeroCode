@@ -102,18 +102,33 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
             }
             // 反转列表，确保按照时间正序（老的在前，新的在后）
             historyList = historyList.reversed();
-            // 按照时间顺序将消息添加到记忆中
-            int loadedCount = 0;
             // 先清理历史缓存，防止重复加载
             chatMemory.clear();
-            for (ChatHistory history : historyList) {
-                if (ChatHistoryMessageTypeEnum.USER.getValue().equals(history.getMessageType())) {
-                    chatMemory.add(UserMessage.from(history.getMessage()));
-                } else if (ChatHistoryMessageTypeEnum.AI.getValue().equals(history.getMessageType())) {
-                    chatMemory.add(AiMessage.from(history.getMessage()));
+            
+            // 确保第一条非系统消息是用户消息
+            // 查找第一个用户消息的位置
+            int firstUserMessageIndex = -1;
+            for (int i = 0; i < historyList.size(); i++) {
+                if (ChatHistoryMessageTypeEnum.USER.getValue().equals(historyList.get(i).getMessageType())) {
+                    firstUserMessageIndex = i;
+                    break;
                 }
-                loadedCount++;
             }
+            
+            // 如果找到了用户消息，则从该位置开始加载消息
+            int loadedCount = 0;
+            if (firstUserMessageIndex != -1) {
+                for (int i = firstUserMessageIndex; i < historyList.size(); i++) {
+                    ChatHistory history = historyList.get(i);
+                    if (ChatHistoryMessageTypeEnum.USER.getValue().equals(history.getMessageType())) {
+                        chatMemory.add(UserMessage.from(history.getMessage()));
+                    } else if (ChatHistoryMessageTypeEnum.AI.getValue().equals(history.getMessageType())) {
+                        chatMemory.add(AiMessage.from(history.getMessage()));
+                    }
+                    loadedCount++;
+                }
+            }
+            
             log.info("成功为 appId: {} 加载 {} 条历史消息", appId, loadedCount);
             return loadedCount;
         } catch (Exception e) {
