@@ -1,34 +1,29 @@
 package com.stefanie.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.paginate.Page;
 import com.stefanie.annotation.AuthCheck;
+import com.stefanie.common.BaseResponse;
 import com.stefanie.common.DeleteRequest;
 import com.stefanie.common.ResultUtils;
 import com.stefanie.constant.UserConstant;
 import com.stefanie.exception.BusinessException;
 import com.stefanie.exception.ErrorCode;
 import com.stefanie.exception.ThrowUtils;
-import com.stefanie.model.dto.*;
+import com.stefanie.model.dto.user.*;
+import com.stefanie.model.entity.User;
 import com.stefanie.model.vo.LoginUserVO;
 import com.stefanie.model.vo.UserVO;
 import com.stefanie.service.UserService;
-import com.stefanie.common.BaseResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import com.stefanie.model.entity.User;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
  * 用户 控制层。
  *
- *  
  */
 @RestController
 @RequestMapping("/user")
@@ -171,7 +166,7 @@ public class UserController {
         Page<User> userPage = userService.page(Page.of(pageNum, pageSize),
                 userService.getQueryWrapper(userQueryRequest));
         // 数据脱敏
-        Page<UserVO> userVOPage = new Page<>(pageNum, pageSize, userPage.getTotal());
+        Page<UserVO> userVOPage = new Page<>(pageNum, pageSize, userPage.getTotalRow());
         List<UserVO> userVOList = userService.getUserVOList(userPage.getRecords());
         userVOPage.setRecords(userVOList);
         return ResultUtils.success(userVOPage);

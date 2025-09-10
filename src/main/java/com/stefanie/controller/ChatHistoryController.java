@@ -1,8 +1,7 @@
 package com.stefanie.controller;
 
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.stefanie.annotation.AuthCheck;
 import com.stefanie.common.BaseResponse;
 import com.stefanie.common.ResultUtils;
@@ -70,3 +69,4 @@ public class ChatHistoryController {
         return ResultUtils.success(result);
     }
 }
+// End of file

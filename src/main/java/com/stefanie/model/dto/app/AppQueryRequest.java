@@ -1,6 +1,6 @@
 package com.stefanie.model.dto.app;
 
-import com.stefanie.common.PageRequest;
+import com.stefanie.common.PageRequest ;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

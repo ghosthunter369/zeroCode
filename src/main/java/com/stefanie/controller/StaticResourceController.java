@@ -15,13 +15,15 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import java.io.File;
 
+/**
+ * 静态资源访问
+ */
 @RestController
 @RequestMapping("/static")
 public class StaticResourceController {
 
     // 应用生成根目录（用于浏览）
     private static final String PREVIEW_ROOT_DIR = AppConstant.CODE_OUTPUT_ROOT_DIR;
-
 
     /**
      * 提供静态资源访问，支持目录重定向

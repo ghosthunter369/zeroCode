@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * 多文件代码解析器（HTML + CSS + JS）
  *
- * @author yupi
+ 
  */
 public class MultiFileCodeParser implements CodeParser<MultiFileCodeResult> {
 

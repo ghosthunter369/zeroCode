@@ -1,4 +1,4 @@
-package com.stefanie.model.dto;
+package com.stefanie.model.dto.user;
 
 import lombok.Data;
 

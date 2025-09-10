@@ -8,11 +8,11 @@
         <version>3.5.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.yupi</groupId>
+    <groupId>com.stefanie</groupId>
     <artifactId>newCode</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>yu-ai-code-mother</name>
-    <description>yu-ai-code-mother</description>
+    <name>zeroCode</name>
+    <description>zeroCode</description>
     <url/>
     <licenses>
         <license/>
@@ -39,10 +39,21 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
         <!-- 数据访问层依赖 -->
+<!--        <dependency>-->
+<!--            <groupId>com.baomidou</groupId>-->
+<!--            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>-->
+<!--            <version>3.5.12</version>-->
+<!--        </dependency>-->
+        <!-- 数据访问层依赖 -->
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-            <version>3.5.12</version>
+            <groupId>com.mybatis-flex</groupId>
+            <artifactId>mybatis-flex-spring-boot3-starter</artifactId>
+            <version>1.11.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mybatis-flex</groupId>
+            <artifactId>mybatis-flex-codegen</artifactId>
+            <version>1.11.1</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>

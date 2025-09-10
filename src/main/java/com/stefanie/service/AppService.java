@@ -1,8 +1,7 @@
 package com.stefanie.service;
 
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.service.IService;
 import com.stefanie.model.dto.app.AppQueryRequest;
 import com.stefanie.model.entity.App;
 import com.stefanie.model.entity.User;
@@ -14,8 +13,28 @@ import java.util.List;
 /**
  * 应用 服务层。
  *
+ 
  */
 public interface AppService extends IService<App> {
+
+    /**
+     * 通过对话生成应用代码
+     *
+     * @param appId 应用 ID
+     * @param message 提示词
+     * @param loginUser 登录用户
+     * @return
+     */
+    Flux<String> chatToGenCode(Long appId, String message, User loginUser);
+
+    /**
+     * 应用部署
+     *
+     * @param appId 应用 ID
+     * @param loginUser 登录用户
+     * @return 可访问的部署地址
+     */
+    String deployApp(Long appId, User loginUser);
 
     /**
      * 获取应用封装类
@@ -41,7 +60,4 @@ public interface AppService extends IService<App> {
      */
     QueryWrapper getQueryWrapper(AppQueryRequest appQueryRequest);
 
-    Flux<String> chatToGenCode(Long appId, String message, User loginUser);
-
-    String deployApp(Long appId, User loginUser);
 }

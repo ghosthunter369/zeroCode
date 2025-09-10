@@ -2,10 +2,9 @@ package com.stefanie.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.stefanie.constant.UserConstant;
 import com.stefanie.exception.ErrorCode;
 import com.stefanie.exception.ThrowUtils;
@@ -13,7 +12,6 @@ import com.stefanie.mapper.ChatHistoryMapper;
 import com.stefanie.model.dto.chathistory.ChatHistoryQueryRequest;
 import com.stefanie.model.entity.App;
 import com.stefanie.model.entity.ChatHistory;
-import com.stefanie.model.entity.User;
 import com.stefanie.model.enums.ChatHistoryMessageTypeEnum;
 import com.stefanie.service.AppService;
 import com.stefanie.service.ChatHistoryService;
@@ -23,14 +21,15 @@ import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-
+import com.stefanie.model.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * 对话历史 服务层实现。
  *
+ 
  */
 @Service
 @Slf4j
@@ -51,19 +50,20 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
         ChatHistoryMessageTypeEnum messageTypeEnum = ChatHistoryMessageTypeEnum.getEnumByValue(messageType);
         ThrowUtils.throwIf(messageTypeEnum == null, ErrorCode.PARAMS_ERROR, "不支持的消息类型");
         // 插入数据库
-        ChatHistory chatHistory = new ChatHistory();
-        chatHistory.setAppId(appId);
-        chatHistory.setMessage(message);
-        chatHistory.setMessageType(messageType);
-        chatHistory.setUserId(userId);
+        ChatHistory chatHistory = ChatHistory.builder()
+                .appId(appId)
+                .message(message)
+                .messageType(messageType)
+                .userId(userId)
+                .build();
         return this.save(chatHistory);
     }
 
     @Override
     public boolean deleteByAppId(Long appId) {
         ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用ID不能为空");
-        QueryWrapper<ChatHistory> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq( "appId", appId);
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .eq("appId", appId);
         return this.remove(queryWrapper);
     }
 
@@ -84,7 +84,7 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
         ChatHistoryQueryRequest queryRequest = new ChatHistoryQueryRequest();
         queryRequest.setAppId(appId);
         queryRequest.setLastCreateTime(lastCreateTime);
-        QueryWrapper<ChatHistory> queryWrapper = this.getQueryWrapper(queryRequest);
+        QueryWrapper queryWrapper = this.getQueryWrapper(queryRequest);
         // 查询数据
         return this.page(Page.of(1, pageSize), queryWrapper);
     }
@@ -92,47 +92,33 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
     @Override
     public int loadChatHistoryToMemory(Long appId, MessageWindowChatMemory chatMemory, int maxCount) {
         try {
-            QueryWrapper<ChatHistory> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq(appId != null, "appId", appId)
-                    .orderByDesc("createTime")
-                    .last("limit 1," + maxCount);
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .eq(ChatHistory::getAppId, appId)
+                    .orderBy(ChatHistory::getCreateTime, false)
+                    .limit(1, maxCount);
             List<ChatHistory> historyList = this.list(queryWrapper);
             if (CollUtil.isEmpty(historyList)) {
                 return 0;
             }
             // 反转列表，确保按照时间正序（老的在前，新的在后）
             historyList = historyList.reversed();
+            // 按照时间顺序将消息添加到记忆中
+            int loadedCount = 0;
             // 先清理历史缓存，防止重复加载
             chatMemory.clear();
-            
-            // 确保第一条非系统消息是用户消息
-            // 查找第一个用户消息的位置
-            int firstUserMessageIndex = -1;
-            for (int i = 0; i < historyList.size(); i++) {
-                if (ChatHistoryMessageTypeEnum.USER.getValue().equals(historyList.get(i).getMessageType())) {
-                    firstUserMessageIndex = i;
-                    break;
+            for (ChatHistory history : historyList) {
+                if (ChatHistoryMessageTypeEnum.USER.getValue().equals(history.getMessageType())) {
+                    chatMemory.add(UserMessage.from(history.getMessage()));
+                } else if (ChatHistoryMessageTypeEnum.AI.getValue().equals(history.getMessageType())) {
+                    chatMemory.add(AiMessage.from(history.getMessage()));
                 }
+                loadedCount++;
             }
-            
-            // 如果找到了用户消息，则从该位置开始加载消息
-            int loadedCount = 0;
-            if (firstUserMessageIndex != -1) {
-                for (int i = firstUserMessageIndex; i < historyList.size(); i++) {
-                    ChatHistory history = historyList.get(i);
-                    if (ChatHistoryMessageTypeEnum.USER.getValue().equals(history.getMessageType())) {
-                        chatMemory.add(UserMessage.from(history.getMessage()));
-                    } else if (ChatHistoryMessageTypeEnum.AI.getValue().equals(history.getMessageType())) {
-                        chatMemory.add(AiMessage.from(history.getMessage()));
-                    }
-                    loadedCount++;
-                }
-            }
-            
             log.info("成功为 appId: {} 加载 {} 条历史消息", appId, loadedCount);
             return loadedCount;
         } catch (Exception e) {
             log.error("加载历史对话失败，appId: {}, error: {}", appId, e.getMessage(), e);
+            // 加载失败不影响系统运行，只是没有历史上下文
             return 0;
         }
     }
@@ -144,8 +130,8 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
      * @return
      */
     @Override
-    public QueryWrapper<ChatHistory> getQueryWrapper(ChatHistoryQueryRequest chatHistoryQueryRequest) {
-        QueryWrapper<ChatHistory> queryWrapper = new QueryWrapper<>();
+    public QueryWrapper getQueryWrapper(ChatHistoryQueryRequest chatHistoryQueryRequest) {
+        QueryWrapper queryWrapper = QueryWrapper.create();
         if (chatHistoryQueryRequest == null) {
             return queryWrapper;
         }
@@ -158,26 +144,23 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
         String sortField = chatHistoryQueryRequest.getSortField();
         String sortOrder = chatHistoryQueryRequest.getSortOrder();
         // 拼接查询条件
-        queryWrapper.eq(id != null, "id", id)
-                .like(StringUtils.isNotBlank(message), "message", message)
-                .eq(StringUtils.isNotBlank(messageType), "messageType", messageType)
-                .eq(appId != null, "appId", appId)
-                .eq(userId != null, "userId", userId);
+        queryWrapper.eq("id", id)
+                .like("message", message)
+                .eq("messageType", messageType)
+                .eq("appId", appId)
+                .eq("userId", userId);
         // 游标查询逻辑 - 只使用 createTime 作为游标
         if (lastCreateTime != null) {
             queryWrapper.lt("createTime", lastCreateTime);
         }
         // 排序
         if (StrUtil.isNotBlank(sortField)) {
-            if ("ascend".equals(sortOrder)) {
-                queryWrapper.orderByAsc(sortField);
-            } else {
-                queryWrapper.orderByDesc(sortField);
-            }
+            queryWrapper.orderBy(sortField, "ascend".equals(sortOrder));
         } else {
             // 默认按创建时间降序排列
-            queryWrapper.orderByDesc("createTime");
+            queryWrapper.orderBy("createTime", false);
         }
         return queryWrapper;
     }
 }
+// End of file

@@ -1,9 +1,9 @@
 package com.stefanie.service;
 
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.service.IService;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.stefanie.model.dto.chathistory.ChatHistoryQueryRequest;
 import com.stefanie.model.entity.ChatHistory;
 import com.stefanie.model.entity.User;
@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 /**
  * 对话历史 服务层。
  *
+ 
  */
 public interface ChatHistoryService extends IService<ChatHistory> {
 
@@ -48,6 +49,7 @@ public interface ChatHistoryService extends IService<ChatHistory> {
     Page<ChatHistory> listAppChatHistoryByPage(Long appId, int pageSize,
                                                LocalDateTime lastCreateTime,
                                                User loginUser);
+
     /**
      * 加载对话历史到内存
      *

@@ -1,69 +1,79 @@
 package com.stefanie.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
+import com.mybatisflex.core.keygen.KeyGenerators;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
- * 对话历史
- * @TableName chat_history
+ * 对话历史 实体类。
+ *
+ 
  */
-@TableName(value ="chat_history")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table("chat_history")
 public class ChatHistory implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     /**
      * id
      */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @Id(keyType = KeyType.Generator, value = KeyGenerators.snowFlakeId)
     private Long id;
 
     /**
      * 消息
      */
-    @TableField(value = "message")
     private String message;
 
     /**
      * user/ai
      */
-    @TableField(value = "messageType")
+    @Column("messageType")
     private String messageType;
 
     /**
      * 应用id
      */
-    @TableField(value = "appId")
+    @Column("appId")
     private Long appId;
 
     /**
      * 创建用户id
      */
-    @TableField(value = "userId")
+    @Column("userId")
     private Long userId;
 
     /**
      * 创建时间
      */
-    @TableField(value = "createTime")
-    private Date createTime;
+    @Column("createTime")
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    @TableField(value = "updateTime")
-    private Date updateTime;
+    @Column("updateTime")
+    private LocalDateTime updateTime;
 
     /**
      * 是否删除
      */
-    @TableField(value = "isDelete")
+    @Column(value = "isDelete", isLogicDelete = true)
     private Integer isDelete;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

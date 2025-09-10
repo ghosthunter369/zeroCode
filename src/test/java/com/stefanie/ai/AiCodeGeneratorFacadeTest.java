@@ -1,6 +1,7 @@
 package com.stefanie.ai;
 
-import com.stefanie.core.AICodeGeneratorFacade;
+
+import com.stefanie.core.AiCodeGeneratorFacade;
 import com.stefanie.model.enums.CodeGenTypeEnum;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +16,7 @@ import java.util.List;
 class AiCodeGeneratorFacadeTest {
 
     @Resource
-    private AICodeGeneratorFacade aiCodeGeneratorFacade;
+    private AiCodeGeneratorFacade aiCodeGeneratorFacade;
 
     @Test
     void generateAndSaveCode() {
@@ -25,8 +26,8 @@ class AiCodeGeneratorFacadeTest {
     @Test
     void generateVueProjectCodeStream() {
         Flux<String> codeStream = aiCodeGeneratorFacade.generateAndSaveCodeStream(
-                "简单的任务记录网站，总代码量不超过 200 行",
-                CodeGenTypeEnum.VUE_PROJECT, 1L);
+                "写一个每日打卡的网站，代码行数不超过200行",
+                CodeGenTypeEnum.VUE_PROJECT, 5L);
         // 阻塞等待所有数据收集完成
         List<String> result = codeStream.collectList().block();
         // 验证结果

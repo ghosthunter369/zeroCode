@@ -1,14 +1,19 @@
-package com.stefanie.model.dto;
+package com.stefanie.model.dto.user;
 
+import com.stefanie.common.PageRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
-/**
- * 用户创建请求
- */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class UserAddRequest implements Serializable {
+public class UserQueryRequest extends PageRequest implements Serializable {
+
+    /**
+     * id
+     */
+    private Long id;
 
     /**
      * 用户昵称
@@ -21,17 +26,12 @@ public class UserAddRequest implements Serializable {
     private String userAccount;
 
     /**
-     * 用户头像
-     */
-    private String userAvatar;
-
-    /**
-     * 用户简介
+     * 简介
      */
     private String userProfile;
 
     /**
-     * 用户角色: user, admin
+     * 用户角色：user/admin/ban
      */
     private String userRole;
 

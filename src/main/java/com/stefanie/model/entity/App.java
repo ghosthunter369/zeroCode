@@ -1,99 +1,108 @@
 package com.stefanie.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
+import com.mybatisflex.core.keygen.KeyGenerators;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
-import lombok.Data;
 
 /**
- * 应用
- * @TableName app
+ * 应用 实体类。
+ *
+ 
  */
-@TableName(value ="app")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table("app")
 public class App implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     /**
      * id
      */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @Id(keyType = KeyType.Generator, value = KeyGenerators.snowFlakeId)
     private Long id;
 
     /**
      * 应用名称
      */
-    @TableField(value = "appName")
+    @Column("appName")
     private String appName;
 
     /**
      * 应用封面
      */
-    @TableField(value = "cover")
     private String cover;
 
     /**
      * 应用初始化的 prompt
      */
-    @TableField(value = "initPrompt")
+    @Column("initPrompt")
     private String initPrompt;
 
     /**
      * 代码生成类型（枚举）
      */
-    @TableField(value = "codeGenType")
+    @Column("codeGenType")
     private String codeGenType;
 
     /**
      * 部署标识
      */
-    @TableField(value = "deployKey")
+    @Column("deployKey")
     private String deployKey;
 
     /**
      * 部署时间
      */
-    @TableField(value = "deployedTime")
+    @Column("deployedTime")
     private LocalDateTime deployedTime;
 
     /**
      * 优先级
      */
-    @TableField(value = "priority")
     private Integer priority;
 
     /**
      * 创建用户id
      */
-    @TableField(value = "userId")
+    @Column("userId")
     private Long userId;
 
     /**
      * 编辑时间
      */
-    @TableField(value = "editTime")
+    @Column("editTime")
     private LocalDateTime editTime;
 
     /**
      * 创建时间
      */
-    @TableField(value = "createTime")
+    @Column("createTime")
     private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    @TableField(value = "updateTime")
+    @Column("updateTime")
     private LocalDateTime updateTime;
 
     /**
      * 是否删除
      */
-    @TableField(value = "isDelete")
+    @Column(value = "isDelete", isLogicDelete = true)
     private Integer isDelete;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

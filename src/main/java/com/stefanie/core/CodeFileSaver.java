@@ -11,48 +11,64 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 /**
- * 在tmp目录保存文件
+ * 文件保存器
  */
 @Deprecated
 public class CodeFileSaver {
-    public static final String FILE_SAVE_ROOT_DIR = System.getProperty("user.dir") + "/tmp/code_output";
 
     /**
-     * 构建唯一目录路径:tmp/code_output/bizType_雪花ID
-     * @param bizType
+     * 文件保存的根目录
+     */
+    private static final String FILE_SAVE_ROOT_DIR = System.getProperty("user.dir") + "/tmp/code_output";
+
+    /**
+     * 保存 HTML 网页代码
+     *
+     * @param htmlCodeResult
      * @return
      */
-    public static String buildUniqueDir(String bizType){
+    public static File saveHtmlCodeResult(HtmlCodeResult htmlCodeResult) {
+        String baseDirPath = buildUniqueDir(CodeGenTypeEnum.HTML.getValue());
+        writeToFile(baseDirPath, "index.html", htmlCodeResult.getHtmlCode());
+        return new File(baseDirPath);
+    }
+
+    /**
+     * 保存多文件网页代码
+     *
+     * @param result
+     * @return
+     */
+    public static File saveMultiFileCodeResult(MultiFileCodeResult result) {
+        String baseDirPath = buildUniqueDir(CodeGenTypeEnum.MULTI_FILE.getValue());
+        writeToFile(baseDirPath, "index.html", result.getHtmlCode());
+        writeToFile(baseDirPath, "style.css", result.getCssCode());
+        writeToFile(baseDirPath, "script.js", result.getJsCode());
+        return new File(baseDirPath);
+    }
+
+    /**
+     * 构建文件的唯一路径：tmp/code_output/bizType_雪花 ID
+     *
+     * @param bizType 代码生成类型
+     * @return
+     */
+    private static String buildUniqueDir(String bizType) {
         String uniqueDirName = StrUtil.format("{}_{}", bizType, IdUtil.getSnowflakeNextIdStr());
         String dirPath = FILE_SAVE_ROOT_DIR + File.separator + uniqueDirName;
         FileUtil.mkdir(dirPath);
         return dirPath;
     }
-    public static void writeToFile(String dirPath,String fileName,String content){
-            String filePath = dirPath + File.separator + fileName;
-            FileUtil.writeString(content,filePath, StandardCharsets.UTF_8);
-    }
 
     /**
-     * 保存HtmlCodeResult到文件
-     * @param htmlCodeResult
-     * @return
+     * 保存单个文件
+     *
+     * @param dirPath
+     * @param filename
+     * @param content
      */
-    public static File saveHTMLCodeResult(HtmlCodeResult htmlCodeResult){
-        String dirPath = buildUniqueDir(CodeGenTypeEnum.HTML.getValue());
-        writeToFile(dirPath,"index.html",htmlCodeResult.getHtmlCode());
-        return new File(dirPath);
-    }
-    /**
-     * 保存MultiFileCodeResult到文件
-     * @param multiFileCodeResult
-     * @return
-     */
-    public static File saveMultiFileCodeResult(MultiFileCodeResult multiFileCodeResult){
-        String dirPath = buildUniqueDir(CodeGenTypeEnum.MULTI_FILE.getValue());
-        writeToFile(dirPath,"index.html",multiFileCodeResult.getHtmlCode());
-        writeToFile(dirPath,"style.css",multiFileCodeResult.getCssCode());
-        writeToFile(dirPath,"script.js",multiFileCodeResult.getJsCode());
-        return new File(dirPath);
+    private static void writeToFile(String dirPath, String filename, String content) {
+        String filePath = dirPath + File.separator + filename;
+        FileUtil.writeString(content, filePath, StandardCharsets.UTF_8);
     }
 }

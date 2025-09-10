@@ -113,3 +113,5 @@ const router = createRouter({
 2. 通过 `npm run dev` 启动开发服务器并正常运行
 3. 通过 `npm run build` 成功构建生产版本
 4. 构建后的项目能够在任意子路径下正常部署和访问
+5. 禁止输出超长token 比如 token数量超过20000，禁止无限循环，当你遇到困难的时候请及时停止。
+6. 不要忘记在index.html文件中引入main.js文件

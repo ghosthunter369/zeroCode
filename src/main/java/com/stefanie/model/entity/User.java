@@ -1,97 +1,98 @@
 package com.stefanie.model.entity;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import java.io.Serial;
-import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
+import com.mybatisflex.core.keygen.KeyGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * 用户 实体类。
  *
- *  
+ 
  */
-/**
- * @TableName user
- */
-@TableName(value ="user")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table("user")
 public class User implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     /**
      * id
      */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @Id(keyType = KeyType.Generator, value = KeyGenerators.snowFlakeId)
     private Long id;
 
     /**
      * 账号
      */
-    @TableField(value = "userAccount")
+    @Column("userAccount")
     private String userAccount;
 
     /**
      * 密码
      */
-    @TableField(value = "userPassword")
+    @Column("userPassword")
     private String userPassword;
 
     /**
      * 用户昵称
      */
-    @TableField(value = "userName")
+    @Column("userName")
     private String userName;
 
     /**
      * 用户头像
      */
-    @TableField(value = "userAvatar")
+    @Column("userAvatar")
     private String userAvatar;
 
     /**
      * 用户简介
      */
-    @TableField(value = "userProfile")
+    @Column("userProfile")
     private String userProfile;
 
     /**
      * 用户角色：user/admin
      */
-    @TableField(value = "userRole")
+    @Column("userRole")
     private String userRole;
 
     /**
      * 编辑时间
      */
-    @TableField(value = "editTime")
-    private Date editTime;
+    @Column("editTime")
+    private LocalDateTime editTime;
 
     /**
      * 创建时间
      */
-    @TableField(value = "createTime")
-    private Date createTime;
+    @Column("createTime")
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    @TableField(value = "updateTime")
-    private Date updateTime;
+    @Column("updateTime")
+    private LocalDateTime updateTime;
 
     /**
      * 是否删除
      */
-    @TableField(value = "isDelete")
+    @Column(value = "isDelete", isLogicDelete = true)
     private Integer isDelete;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

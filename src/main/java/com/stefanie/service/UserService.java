@@ -1,19 +1,18 @@
 package com.stefanie.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.stefanie.model.dto.UserQueryRequest;
-import com.stefanie.model.entity.User;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.service.IService;
+import com.stefanie.model.dto.user.UserQueryRequest;
 import com.stefanie.model.vo.LoginUserVO;
 import com.stefanie.model.vo.UserVO;
 import jakarta.servlet.http.HttpServletRequest;
-
+import com.stefanie.model.entity.User;
 import java.util.List;
 
 /**
  * 用户 服务层。
  *
- *  
+ 
  */
 public interface UserService extends IService<User> {
 
@@ -82,7 +81,7 @@ public interface UserService extends IService<User> {
      * @param userQueryRequest
      * @return
      */
-    QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
+    QueryWrapper getQueryWrapper(UserQueryRequest userQueryRequest);
 
     /**
      * 加密

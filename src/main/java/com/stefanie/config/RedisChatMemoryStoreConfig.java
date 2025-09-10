@@ -6,6 +6,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Redis 持久化对话记忆
+ */
 @Configuration
 @ConfigurationProperties(prefix = "spring.data.redis")
 @Data

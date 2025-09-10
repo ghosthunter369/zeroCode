@@ -1,6 +1,5 @@
 package com.stefanie.config;
 
-import dev.langchain4j.community.model.dashscope.QwenStreamingChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import lombok.Data;
@@ -9,15 +8,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-//@ConfigurationProperties(prefix = "langchain4j.community.dashscope.streaming-chat-model")
-@ConfigurationProperties(prefix = "langchain4j.open-ai.streaming-chat-model")
+@ConfigurationProperties(prefix = "langchain4j.open-ai.chat-model")
 @Data
 public class ReasoningStreamingChatModelConfig {
 
     private String baseUrl;
 
     private String apiKey;
-
     private String modelName;
 
     /**
@@ -25,7 +22,6 @@ public class ReasoningStreamingChatModelConfig {
      */
     @Bean
     public StreamingChatModel reasoningStreamingChatModel() {
-        // 为了测试方便临时修改
         final int maxTokens = 8192;
         // 生产环境使用
         // final String modelName = "deepseek-reasoner";
@@ -35,8 +31,8 @@ public class ReasoningStreamingChatModelConfig {
                 .baseUrl(baseUrl)
                 .modelName(modelName)
                 .maxTokens(maxTokens)
-                .logResponses(true)
                 .logRequests(true)
+                .logResponses(true)
                 .build();
     }
 }
