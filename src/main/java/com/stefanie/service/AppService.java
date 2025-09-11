@@ -2,6 +2,7 @@ package com.stefanie.service;
 
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
+import com.stefanie.model.dto.app.AppAddRequest;
 import com.stefanie.model.dto.app.AppQueryRequest;
 import com.stefanie.model.entity.App;
 import com.stefanie.model.entity.User;
@@ -26,6 +27,8 @@ public interface AppService extends IService<App> {
      * @return
      */
     Flux<String> chatToGenCode(Long appId, String message, User loginUser);
+
+    Long createApp(AppAddRequest appAddRequest, User loginUser);
 
     /**
      * 应用部署

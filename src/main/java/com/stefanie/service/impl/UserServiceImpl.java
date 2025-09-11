@@ -21,6 +21,7 @@ import org.springframework.util.DigestUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.stefanie.constant.UserConstant.USER_LOGIN_STATE;
@@ -28,8 +29,6 @@ import static com.stefanie.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * 用户 服务层实现。
- *
- 
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -62,7 +61,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = new User();
         user.setUserAccount(userAccount);
         user.setUserPassword(encryptPassword);
-        user.setUserName("无名");
+        String uuid = UUID.randomUUID().toString().substring(0, 8);
+        user.setUserName("user_" + uuid);
+        user.setUserAvatar("https://img.alicdn.com/imgextra/i4/O1CN016XsbLu1ImjlR8jtIG_!!6000000000936-55-tps-32-32.svg");
         user.setUserRole(UserRoleEnum.USER.getValue());
         boolean saveResult = this.save(user);
         if (!saveResult) {
